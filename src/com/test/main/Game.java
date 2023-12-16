@@ -28,7 +28,7 @@ public class Game extends Canvas implements Runnable{
         Menu,
         Help,
         Game
-    };
+    }
 
     public STATE gameState = STATE.Menu;
 
@@ -184,11 +184,7 @@ public class Game extends Canvas implements Runnable{
 
         if(player.getX() > tx && player.getX() < xmax && player.getY() > ty && player.getY() < ymax) {
             for(int k = 1; k < 3; k++) {
-                if (player.isSelected()) {
-                    grid[i][j].setSelectable(true);
-                } else {
-                    grid[i][j].setSelectable(false);
-                }
+                grid[i][j].setSelectable(player.isSelected());
                 if(i-k >= 0) {
                     if(!grid[i-k][j].contains.equals(Tiles.OBJECT.Enemy)){
                         grid[i-k][j].setSelectable(true);
@@ -258,6 +254,7 @@ public class Game extends Canvas implements Runnable{
     }
 
     public void movePlayer(Tiles tile) {
+        topBar.setCurrentAction(TopBar.ACTION.NONE);
         Tiles prevTile = player.getCurrentTile();
         player.setSelected(false);
         makeSelectable();
@@ -302,19 +299,19 @@ public class Game extends Canvas implements Runnable{
         }
     }
 
-    public static float clamp(float var, int min, int max){
-        if(var >= max){
-            return  var =  max;
-        }
-        else if(var <= min){
-            return var = min;
-        }
-        else{
-            return var;
-        }
-    }
+//    public static float clamp(float var, int min, int max){
+//        if(var >= max){
+//            return  var =  max;
+//        }
+//        else if(var <= min){
+//            return var = min;
+//        }
+//        else{
+//            return var;
+//        }
+//    }
 
-    public static void main(String args[]){
+    public static void main(String[] args){
         new Game();
     }
 }

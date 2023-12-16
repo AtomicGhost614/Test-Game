@@ -20,13 +20,21 @@ public class TopBar extends MouseAdapter {
         FIGHT
     }
 
-    public ACTION currentAction = ACTION.NONE;
+    private ACTION currentAction = ACTION.NONE;
 
     public TopBar(Game game, Handler handler) {
         this.game = game;
         this.handler = handler;
         this.fight = false;
         this.move = false;
+    }
+
+    public void setCurrentAction(ACTION action) {
+        currentAction = action;
+    }
+
+    public ACTION getCurrentAction() {
+        return currentAction;
     }
 
     @Override
@@ -36,8 +44,8 @@ public class TopBar extends MouseAdapter {
 
         //fight button
         if(mouseOver(mx, my, 10, 8, 100, 50)){
-            this.fight = !this.fight;
-            this.move = false;
+//            this.fight = !this.fight;
+//            this.move = false;
             if (this.currentAction == ACTION.FIGHT) {
                 this.currentAction = ACTION.NONE;
             } else {
@@ -50,8 +58,8 @@ public class TopBar extends MouseAdapter {
 
         //move button
         if(mouseOver(mx, my, 120, 8, 100, 50)){
-            this.move = !this.move;
-            this.fight = false;
+//            this.move = !this.move;
+//            this.fight = false;
             game.makeSelectable();
             if (this.currentAction == ACTION.MOVE) {
                 this.currentAction = ACTION.NONE;
@@ -74,11 +82,7 @@ public class TopBar extends MouseAdapter {
     private boolean mouseOver(int mx, int my, int x, int y, int width, int height) {
         if(game.gameState == Game.STATE.Game) {
             if (mx > x && mx < x + width) {
-                if (my > y && my < y + height) {
-                    return true;
-                } else {
-                    return false;
-                }
+                return my > y && my < y + height;
             }
         }
         return false;
@@ -99,7 +103,7 @@ public class TopBar extends MouseAdapter {
         g.drawRect(120,8,100,50);
 
         //Fight button
-        if (this.fight) {
+        if (currentAction.equals(ACTION.FIGHT)) {
             g.fillRect(10,8,100,50);
             g.setColor(Color.WHITE);
             g.drawString("Fight",24,45);
@@ -109,7 +113,7 @@ public class TopBar extends MouseAdapter {
         }
 
         //Move button
-        if (this.move) {
+        if (currentAction.equals(ACTION.MOVE)) {
             g.fillRect(120,8,100,50);
             g.setColor(Color.WHITE);
             g.drawString("Move",134,45);

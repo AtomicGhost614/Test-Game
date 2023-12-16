@@ -28,7 +28,7 @@ public class Tiles extends MouseAdapter implements MouseMotionListener{
         Player,
         Enemy,
         None
-    };
+    }
 
     public OBJECT contains = OBJECT.None;
 
@@ -75,20 +75,21 @@ public class Tiles extends MouseAdapter implements MouseMotionListener{
         int xmax = this.tx + size;
         int ymax = this.ty + size;
 
-        if(mouseOver(mx, my, this.tx, this.ty, 94, 94) && game.topBar.currentAction.equals(TopBar.ACTION.MOVE)){
-            if(hover && contains.equals(OBJECT.Player)) {
-                tempObject.setSelected(!tempObject.isSelected());
-                game.makeSelectable();
-            } else if(selectable && contains.equals(OBJECT.None)) {
+        if(mouseOver(mx, my, this.tx, this.ty, 94, 94) && game.topBar.getCurrentAction().equals(TopBar.ACTION.MOVE)){
+//            if(hover && contains.equals(OBJECT.Player)) {
+//                tempObject.setSelected(!tempObject.isSelected());
+//                game.makeSelectable();
+//            } else
+                if(selectable && contains.equals(OBJECT.None)) {
                 game.movePlayer(this);
-                int eX = r.nextInt(3);
-                if (eX == 2) {
-                    eX = -1;
-                }
-                int eY = r.nextInt(3);
-                if (eY == 2) {
-                    eY = -1;
-                }
+//                int eX = r.nextInt(3);
+//                if (eX == 2) {
+//                    eX = -1;
+//                }
+//                int eY = r.nextInt(3);
+//                if (eY == 2) {
+//                    eY = -1;
+//                }
             }
         }
 
@@ -103,12 +104,7 @@ public class Tiles extends MouseAdapter implements MouseMotionListener{
         int ymax = this.ty + size;
 
         if (mx > tx && mx < xmax) {
-            if (my > ty && my < ymax) {
-                hover = true;
-            }
-            else {
-                hover = false;
-            }
+            hover = my > ty && my < ymax;
         }
         else {
             hover = false;
@@ -118,11 +114,7 @@ public class Tiles extends MouseAdapter implements MouseMotionListener{
     private boolean mouseOver(int mx, int my, int x, int y, int width, int height) {
         if(game.gameState == Game.STATE.Game) {
             if (mx > x && mx < x + width) {
-                if (my > y && my < y + height) {
-                    return true;
-                } else {
-                    return false;
-                }
+                return my > y && my < y + height;
             }
         }
         return false;
@@ -143,6 +135,14 @@ public class Tiles extends MouseAdapter implements MouseMotionListener{
            if(hover) {
                 g.setColor(Color.lightGray);
                 g.fillRect(tx,ty,size,size);
+           }
+           if(tempObject != null) {
+               if (game.topBar.getCurrentAction().equals(TopBar.ACTION.MOVE)) {
+                   tempObject.setSelected(true);
+                   game.makeSelectable();
+               } else {
+                   tempObject.setSelected(false);
+               }
            }
 
             g.setColor(Color.WHITE);
