@@ -170,94 +170,123 @@ public class Game extends Canvas implements Runnable{
         bs.show();
     }
 
-    public void makeSelectable() {
+    public void makeSelectable(int range) {
         Tiles centerTile = player.getCurrentTile();
+//        int range = 4;
 
         int i = centerTile.xUnit;
         int j = centerTile.yUnit;
 
-        int tx = grid[i][j].tx;
-        int ty = grid[i][j].ty;
+        selectTile(i,j,0,0);
 
-        int xmax = tx + Tiles.size;
-        int ymax = ty + Tiles.size;
+//        int tx = grid[i][j].tx;
+//        int ty = grid[i][j].ty;
+//
+//        int xmax = tx + Tiles.size;
+//        int ymax = ty + Tiles.size;
 
-        if(player.getX() > tx && player.getX() < xmax && player.getY() > ty && player.getY() < ymax) {
-            for(int k = 1; k < 3; k++) {
-                grid[i][j].setSelectable(player.isSelected());
-                if(i-k >= 0) {
-                    if(!grid[i-k][j].contains.equals(Tiles.OBJECT.Enemy)){
-                        grid[i-k][j].setSelectable(true);
-                    }
-                    if (!player.isSelected()){
-                        grid[i-k][j].setSelectable(false);
-                    }
-                }
-                if(j-k >= 1) {
-                    if(!grid[i][j-k].contains.equals(Tiles.OBJECT.Enemy)) {
-                        grid[i][j - k].setSelectable(true);
-                    }
-                    if (!player.isSelected()){
-                        grid[i][j - k].setSelectable(false);
-                    }
-                }
-                if(i-(k/2) >= 0 && j-(k/2) >= 1) {
-                    if(!grid[i-(k/2)][j-(k/2)].contains.equals(Tiles.OBJECT.Enemy)) {
-                        grid[i-(k/2)][j-(k/2)].setSelectable(true);
-                    }
-                    if (!player.isSelected()){
-                        grid[i-(k/2)][j-(k/2)].setSelectable(false);
-                    }
-                }
-                if(i+k < xaxis) {
-                    if(!grid[i+k][j].contains.equals(Tiles.OBJECT.Enemy)) {
-                        grid[i+k][j].setSelectable(true);
-                    }
-                    if (!player.isSelected()){
-                        grid[i+k][j].setSelectable(false);
-                    }
-                }
-                if(j+k < yaxis) {
-                    if(!grid[i][j+k].contains.equals(Tiles.OBJECT.Enemy)) {
-                        grid[i][j+k].setSelectable(true);
-                    }
-                    if (!player.isSelected()){
-                        grid[i][j+k].setSelectable(false);
-                    }
-                }
-                if(i+(k/2) < xaxis && j+(k/2) < yaxis) {
-                    if(!grid[i+(k/2)][j+(k/2)].contains.equals(Tiles.OBJECT.Enemy)) {
-                        grid[i+(k/2)][j+(k/2)].setSelectable(true);
-                    }
-                    if (!player.isSelected()){
-                        grid[i+(k/2)][j+(k/2)].setSelectable(false);
-                    }
-                }
-                if(j-(k/2) >= 1 && i+(k/2) < xaxis) {
-                    if(!grid[i + (k / 2)][j - (k / 2)].contains.equals(Tiles.OBJECT.Enemy)) {
-                        grid[i + (k / 2)][j - (k / 2)].setSelectable(true);
-                    }
-                    if (!player.isSelected()){
-                        grid[i + (k / 2)][j - (k / 2)].setSelectable(false);
-                    }
-                }
-                if(i-(k/2) >= 0 && j+(k/2) < yaxis) {
-                    if(!grid[i - (k / 2)][j + (k / 2)].contains.equals(Tiles.OBJECT.Enemy)) {
-                        grid[i - (k / 2)][j + (k / 2)].setSelectable(true);
-                    }
-                    if (!player.isSelected()){
-                        grid[i - (k / 2)][j + (k / 2)].setSelectable(false);
-                    }
-                }
+        for (int main = 1; main <= range; main++) {
+            for (int offset = 0; offset < main; offset++) {
+                selectTile(i,j,(main-offset),offset);
+                selectTile(i,j,offset,-(main-offset));
+                selectTile(i,j,-(main-offset),-offset);
+                selectTile(i,j,-offset,(main-offset));
             }
         }
+
+//        if(player.getX() > tx && player.getX() < xmax && player.getY() > ty && player.getY() < ymax) {
+//            for(int k = 1; k < 3; k++) {
+//                grid[i][j].setSelectable(player.isSelected());
+//                if(i-k >= 0) {
+//                    if(!grid[i-k][j].contains.equals(Tiles.OBJECT.Enemy)){
+//                        grid[i-k][j].setSelectable(true);
+//                    }
+//                    if (!player.isSelected()){
+//                        grid[i-k][j].setSelectable(false);
+//                    }
+//                }
+//                if(j-k >= 1) {
+//                    if(!grid[i][j-k].contains.equals(Tiles.OBJECT.Enemy)) {
+//                        grid[i][j - k].setSelectable(true);
+//                    }
+//                    if (!player.isSelected()){
+//                        grid[i][j - k].setSelectable(false);
+//                    }
+//                }
+//                if(i-(k/2) >= 0 && j-(k/2) >= 1) {
+//                    if(!grid[i-(k/2)][j-(k/2)].contains.equals(Tiles.OBJECT.Enemy)) {
+//                        grid[i-(k/2)][j-(k/2)].setSelectable(true);
+//                    }
+//                    if (!player.isSelected()){
+//                        grid[i-(k/2)][j-(k/2)].setSelectable(false);
+//                    }
+//                }
+//                if(i+k < xaxis) {
+//                    if(!grid[i+k][j].contains.equals(Tiles.OBJECT.Enemy)) {
+//                        grid[i+k][j].setSelectable(true);
+//                    }
+//                    if (!player.isSelected()){
+//                        grid[i+k][j].setSelectable(false);
+//                    }
+//                }
+//                if(j+k < yaxis) {
+//                    if(!grid[i][j+k].contains.equals(Tiles.OBJECT.Enemy)) {
+//                        grid[i][j+k].setSelectable(true);
+//                    }
+//                    if (!player.isSelected()){
+//                        grid[i][j+k].setSelectable(false);
+//                    }
+//                }
+//                if(i+(k/2) < xaxis && j+(k/2) < yaxis) {
+//                    if(!grid[i+(k/2)][j+(k/2)].contains.equals(Tiles.OBJECT.Enemy)) {
+//                        grid[i+(k/2)][j+(k/2)].setSelectable(true);
+//                    }
+//                    if (!player.isSelected()){
+//                        grid[i+(k/2)][j+(k/2)].setSelectable(false);
+//                    }
+//                }
+//                if(j-(k/2) >= 1 && i+(k/2) < xaxis) {
+//                    if(!grid[i + (k / 2)][j - (k / 2)].contains.equals(Tiles.OBJECT.Enemy)) {
+//                        grid[i + (k / 2)][j - (k / 2)].setSelectable(true);
+//                    }
+//                    if (!player.isSelected()){
+//                        grid[i + (k / 2)][j - (k / 2)].setSelectable(false);
+//                    }
+//                }
+//                if(i-(k/2) >= 0 && j+(k/2) < yaxis) {
+//                    if(!grid[i - (k / 2)][j + (k / 2)].contains.equals(Tiles.OBJECT.Enemy)) {
+//                        grid[i - (k / 2)][j + (k / 2)].setSelectable(true);
+//                    }
+//                    if (!player.isSelected()){
+//                        grid[i - (k / 2)][j + (k / 2)].setSelectable(false);
+//                    }
+//                }
+//            }
+//        }
+    }
+
+    public void selectTile(int i, int j, int iMove, int jMove) {
+        int newI = i + iMove;
+        int newJ = j + jMove;
+        try {
+            Tiles tile = grid[newI][newJ];
+            if (!tile.contains.equals(Tiles.OBJECT.Enemy)) {
+                tile.setSelectable(player.isSelected());
+            }
+        } catch (ArrayIndexOutOfBoundsException ignored) {
+
+        }
+//        Tiles tile = grid[newI][newJ];
+//        if (tile != null && !tile.contains.equals(Tiles.OBJECT.Enemy)) {
+//            tile.setSelectable(player.isSelected());
+//        }
     }
 
     public void movePlayer(Tiles tile) {
         topBar.setCurrentAction(TopBar.ACTION.NONE);
         Tiles prevTile = player.getCurrentTile();
         player.setSelected(false);
-        makeSelectable();
+        makeSelectable(2);
         prevTile.setTempObject(null);
         tile.setTempObject(player);
 

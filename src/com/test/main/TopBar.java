@@ -60,12 +60,13 @@ public class TopBar extends MouseAdapter {
         if(mouseOver(mx, my, 120, 8, 100, 50)){
 //            this.move = !this.move;
 //            this.fight = false;
-            game.makeSelectable();
+//            game.makeSelectable(2);
             if (this.currentAction == ACTION.MOVE) {
                 this.currentAction = ACTION.NONE;
             } else {
                 this.currentAction = ACTION.MOVE;
             }
+            game.makeSelectable(2);
             //System.out.println("Click");
             //handler.addObject(new Player(Game.WIDTH / 2 - 32, Game.HEIGHT / 2 - 32, ID.Player, handler));
             //handler.addObject(new BasicEnemy(r.nextInt(Game.SPAWN_WIDTH), r.nextInt(Game.SPAWN_HEIGHT), ID.BasicEnemy, handler));
@@ -89,7 +90,7 @@ public class TopBar extends MouseAdapter {
     }
 
     public void render(Graphics g) {
-        Font fnt = new Font("arial", 1, 30);
+        Font fnt = new Font("arial", Font.BOLD, 30);
         g.setFont(fnt);
         g.setColor(Color.WHITE);
         g.drawRect(941,0,1,672);
