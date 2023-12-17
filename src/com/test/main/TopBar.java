@@ -44,40 +44,23 @@ public class TopBar extends MouseAdapter {
 
         //fight button
         if(mouseOver(mx, my, 10, 8, 100, 50)){
-//            this.fight = !this.fight;
-//            this.move = false;
             if (this.currentAction == ACTION.FIGHT) {
                 this.currentAction = ACTION.NONE;
             } else {
                 this.currentAction = ACTION.FIGHT;
             }
-            //System.out.println("Click");
-            //handler.addObject(new Player(Game.WIDTH / 2 - 32, Game.HEIGHT / 2 - 32, ID.Player, handler));
-            //handler.addObject(new BasicEnemy(r.nextInt(Game.SPAWN_WIDTH), r.nextInt(Game.SPAWN_HEIGHT), ID.BasicEnemy, handler));
+            game.makeSelectable(2,false);
         }
 
         //move button
         if(mouseOver(mx, my, 120, 8, 100, 50)){
-//            this.move = !this.move;
-//            this.fight = false;
-//            game.makeSelectable(2);
             if (this.currentAction == ACTION.MOVE) {
                 this.currentAction = ACTION.NONE;
             } else {
                 this.currentAction = ACTION.MOVE;
             }
-            game.makeSelectable(2);
-            //System.out.println("Click");
-            //handler.addObject(new Player(Game.WIDTH / 2 - 32, Game.HEIGHT / 2 - 32, ID.Player, handler));
-            //handler.addObject(new BasicEnemy(r.nextInt(Game.SPAWN_WIDTH), r.nextInt(Game.SPAWN_HEIGHT), ID.BasicEnemy, handler));
+//            game.makeSelectable(2);
         }
-
-//        if(mouseOver(mx, my, 0, 0, 942, 5)){
-//            this.fight = true;
-//            System.out.println("Click");
-//            //handler.addObject(new Player(Game.WIDTH / 2 - 32, Game.HEIGHT / 2 - 32, ID.Player, handler));
-//            //handler.addObject(new BasicEnemy(r.nextInt(Game.SPAWN_WIDTH), r.nextInt(Game.SPAWN_HEIGHT), ID.BasicEnemy, handler));
-//        }
     }
 
     private boolean mouseOver(int mx, int my, int x, int y, int width, int height) {

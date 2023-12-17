@@ -75,21 +75,11 @@ public class Tiles extends MouseAdapter implements MouseMotionListener{
         int xmax = this.tx + size;
         int ymax = this.ty + size;
 
-        if(mouseOver(mx, my, this.tx, this.ty, 94, 94) && game.topBar.getCurrentAction().equals(TopBar.ACTION.MOVE)){
-//            if(hover && contains.equals(OBJECT.Player)) {
-//                tempObject.setSelected(!tempObject.isSelected());
-//                game.makeSelectable();
-//            } else
-                if(selectable && contains.equals(OBJECT.None)) {
+        if(mouseOver(mx, my, this.tx, this.ty, 94, 94) && selectable){
+            if(game.topBar.getCurrentAction().equals(TopBar.ACTION.MOVE) && contains.equals(OBJECT.None)) {
                 game.movePlayer(this);
-//                int eX = r.nextInt(3);
-//                if (eX == 2) {
-//                    eX = -1;
-//                }
-//                int eY = r.nextInt(3);
-//                if (eY == 2) {
-//                    eY = -1;
-//                }
+            } else if(game.topBar.getCurrentAction().equals(TopBar.ACTION.FIGHT) && contains.equals(OBJECT.Enemy)){
+                game.destroyEnemy();
             }
         }
 
@@ -136,9 +126,10 @@ public class Tiles extends MouseAdapter implements MouseMotionListener{
                 g.setColor(Color.lightGray);
                 g.fillRect(tx,ty,size,size);
            }
-           if(tempObject != null) {
-               tempObject.setSelected(game.topBar.getCurrentAction().equals(TopBar.ACTION.MOVE));
-               game.makeSelectable(2);
+           if (game.topBar.getCurrentAction().equals(TopBar.ACTION.FIGHT)) {
+               game.makeSelectable(1,true);
+           } else {
+               game.makeSelectable(2,game.topBar.getCurrentAction().equals(TopBar.ACTION.MOVE));
            }
 
             g.setColor(Color.WHITE);
