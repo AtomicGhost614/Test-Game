@@ -29,11 +29,6 @@ public class Player extends GameObject{
     public void tick() {
         x += velX;
         y += velY;
-
-        //x = Game.clamp((int) x, 0, Game.WIDTH - 51);
-        //y = Game.clamp((int) y, 0, Game.HEIGHT - 80);
-
-        //collision();
     }
 
     @Override
@@ -46,14 +41,6 @@ public class Player extends GameObject{
         g.fillRect((int) x, (int) y, 32, 32);
     }
 
-    /*public boolean isSelected() {
-        return selected;
-    }
-
-    public void setSelected(boolean selected) {
-        this.selected = selected;
-    }*/
-
     public Handler getHandler() {
         return handler;
     }
@@ -61,12 +48,4 @@ public class Player extends GameObject{
     public void setHandler(Handler handler) {
         this.handler = handler;
     }
-
-//    public Tiles getCurrentTile() {
-//        return currentTile;
-//    }
-//
-//    public void setCurrentTile(Tiles currentTile) {
-//        this.currentTile = currentTile;
-//    }
 }

@@ -47,17 +47,32 @@ public class Game extends Canvas implements Runnable{
         for(int i = 0; i < xaxis; i++){
             for(int j = 0; j < yaxis; j++){
                 grid[i][j] = new Tiles(this,handler,(i * Tiles.size),(j * Tiles.size)+14,i,j);
-                if (j == 2) {
-                    if (i == 2) {
-                        grid[i][j].setTempObject(player);
-                        //player.setCurrentTile(grid[i][j]);
-                    } else if (i == 5) {
-                        grid[i][j].setTempObject(enemy);
-                        //enemy.setCurrentTile(grid[i][j]);
-                    }
-                }
+//                if (j == 2) {
+//                    if (i == 2) {
+//                        grid[i][j].setTempObject(player);
+//                        //player.setCurrentTile(grid[i][j]);
+//                    } else if (i == 5) {
+//                        grid[i][j].setTempObject(enemy);
+//                        //enemy.setCurrentTile(grid[i][j]);
+//                    }
+//                }
                 this.addMouseMotionListener(grid[i][j]);
                 this.addMouseListener(grid[i][j]);
+            }
+        }
+        int playerRandX = r.nextInt(xaxis-1);
+        int playerRandY = r.nextInt(yaxis-1);
+        grid[playerRandX][playerRandY].setTempObject(player);
+        int enemyRandX = r.nextInt(xaxis-1);
+        int enemyRandY = r.nextInt(yaxis-1);
+        Tiles enemyTile = grid[enemyRandX][enemyRandY];
+        while (!enemyTile.contains.equals(Tiles.OBJECT.Enemy)) {
+            if (enemyTile.contains.equals(Tiles.OBJECT.Player)) {
+                enemyRandX = r.nextInt(xaxis-1);
+                enemyRandY = r.nextInt(yaxis-1);
+                enemyTile = grid[enemyRandX][enemyRandY];
+            } else {
+                enemyTile.setTempObject(enemy);
             }
         }
 //        topBar = new TopBar(this,handler);
