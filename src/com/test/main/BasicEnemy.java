@@ -28,17 +28,7 @@ public class BasicEnemy extends GameObject{
 
     @Override
     public void tick() {
-//        x += velX;
-//        y += velY;
-//
-//        if(y <= 0 || y >= Game.HEIGHT - 61){
-//            velY *= -1;
-//        }
-//        if(x <= 0 || x >= Game.WIDTH - 38){
-//            velX *= -1;
-//        }
 
-        //handler.addObject(new Trail((int) x, (int) y, ID.Trail, Color.RED, 16, 16, 0.02f, handler));
     }
 
     @Override

@@ -79,7 +79,7 @@ public class Tiles extends MouseAdapter implements MouseMotionListener{
             if(game.topBar.getCurrentAction().equals(TopBar.ACTION.MOVE) && contains.equals(OBJECT.None)) {
                 game.movePlayer(this);
             } else if(game.topBar.getCurrentAction().equals(TopBar.ACTION.FIGHT) && contains.equals(OBJECT.Enemy)){
-                game.destroyEnemy();
+                game.destroyEnemy(this);
             }
         }
 

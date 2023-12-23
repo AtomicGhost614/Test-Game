@@ -20,7 +20,7 @@ public class Game extends Canvas implements Runnable{
     private final Handler handler;
 
     private final int xaxis = WIDTH/Tiles.size;
-    private final int yaxis = (HEIGHT/Tiles.size);
+    private final int yaxis = HEIGHT/Tiles.size - 1;
     private final Tiles[][] grid = new Tiles[xaxis][yaxis];
     public final TopBar topBar;
 
@@ -46,7 +46,7 @@ public class Game extends Canvas implements Runnable{
         r = new Random();
         for(int i = 0; i < xaxis; i++){
             for(int j = 0; j < yaxis; j++){
-                grid[i][j] = new Tiles(this,handler,(i * Tiles.size),(j * Tiles.size)+14,i,j);
+                grid[i][j] = new Tiles(this,handler,(i * Tiles.size),(j * Tiles.size)+108,i,j);
 //                if (j == 2) {
 //                    if (i == 2) {
 //                        grid[i][j].setTempObject(player);
@@ -222,46 +222,56 @@ public class Game extends Canvas implements Runnable{
         prevTile.setTempObject(null);
         tile.setTempObject(player);
 
-        Tiles enemyTile = enemy.getCurrentTile();
+        moveEnemies();
+        spawnNewEnemy(10);
+    }
 
-        int i = enemyTile.xUnit;
-        int j = enemyTile.yUnit;
+    public void moveEnemies() {
+        for (GameObject enemy : handler.object) {
+            if (enemy.getId().equals(ID.Enemy)) {
+                Tiles enemyTile = enemy.getCurrentTile();
 
-        int eX = r.nextInt(3);
-        if (eX == 2) {
-            eX = -1;
-        }
+                int i = enemyTile.xUnit;
+                int j = enemyTile.yUnit;
 
-        int eY = r.nextInt(3);
-        if (eY == 2) {
-            eY = -1;
-        }
+                int eX = r.nextInt(3)-1;
+                int eY = r.nextInt(3)-1;
 
-        if ((i+eX) >= 0 && (i+eX) < xaxis && (j+eY) >= 1 && (j+eY) < yaxis) {
-            if (grid[i+eX][j+eY].getTempObject() == null) {
-                enemyTile.setTempObject(null);
-                grid[i+eX][j+eY].setTempObject(enemy);
-            }
-        } else if ((i+eX) >= 0 && (i+eX) < xaxis) {
-            eY = eY * (-1);
-            if (grid[i+eX][j+eY].getTempObject() == null) {
-                enemyTile.setTempObject(null);
-                grid[i+eX][j+eY].setTempObject(enemy);
-            }
-        } else if ((j+eY) >= 1 && (j+eY) < yaxis) {
-            eX = eX * (-1);
-            if (grid[i+eX][j+eY].getTempObject() == null) {
-                enemyTile.setTempObject(null);
-                grid[i+eX][j+eY].setTempObject(enemy);
+                try {
+                    Tiles moveTile = grid[i+eX][j+eY];
+                    if (moveTile.getTempObject() == null) {
+                        enemyTile.setTempObject(null);
+                        grid[i+eX][j+eY].setTempObject(enemy);
+                    }
+                } catch (ArrayIndexOutOfBoundsException ignored) {}
             }
         }
     }
 
-    public void destroyEnemy(){
-        handler.removeObject(enemy);
+    public void spawnNewEnemy(int spawnRate) {
+        int spawn = r.nextInt(spawnRate);
+        int spawnX = r.nextInt(xaxis-1);
+        int spawnY = r.nextInt(yaxis-1);
+
+        if (spawn == 0) {
+            Tiles spawnTile = grid[spawnX][spawnY];
+            if (spawnTile.getTempObject() == null) {
+                BasicEnemy enemy = new BasicEnemy(ID.Enemy, handler);
+                handler.addObject(enemy);
+                spawnTile.setTempObject(enemy);
+            }
+        }
+    }
+
+    public void destroyEnemy(Tiles selectedTile) {
+        handler.removeObject(selectedTile.getTempObject());
+        selectedTile.contains = Tiles.OBJECT.None;
         topBar.setCurrentAction(TopBar.ACTION.NONE);
         player.setSelected(false);
         makeSelectable(1,false);
+
+        moveEnemies();
+        spawnNewEnemy(1);
     }
 
     public static void main(String[] args){
