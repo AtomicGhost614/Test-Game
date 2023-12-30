@@ -1,14 +1,12 @@
 package com.test.main;
 
+import com.test.main.entities.GameObject;
+
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.Random;
-
-import static com.test.main.Game.HEIGHT;
-import static com.test.main.Game.WIDTH;
 
 public class Tiles extends MouseAdapter implements MouseMotionListener{
 

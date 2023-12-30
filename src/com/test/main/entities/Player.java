@@ -1,9 +1,13 @@
-package com.test.main;
+package com.test.main.entities;
+
+import com.test.main.Handler;
+import com.test.main.ID;
+import com.test.main.entities.GameObject;
 
 import java.awt.*;
 import java.util.Random;
 
-public class Player extends GameObject{
+public class Player extends GameObject {
 
     Random r = new Random();
 //    private Tiles currentTile;

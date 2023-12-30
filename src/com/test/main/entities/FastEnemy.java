@@ -1,14 +1,15 @@
-package com.test.main;
+package com.test.main.entities;
+
+import com.test.main.Handler;
+import com.test.main.ID;
+import com.test.main.entities.GameObject;
 
 import java.awt.*;
 
-public class FastEnemy extends GameObject{
-
-    private Handler handler;
+public class FastEnemy extends GameObject {
 
     public FastEnemy(ID id, Handler handler) {
         super(0, 0, id);
-        this.handler = handler;
         this.setMoveRange(4);
     }
 

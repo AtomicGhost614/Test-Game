@@ -1,4 +1,7 @@
-package com.test.main;
+package com.test.main.entities;
+
+import com.test.main.ID;
+import com.test.main.Tiles;
 
 import java.awt.*;
 

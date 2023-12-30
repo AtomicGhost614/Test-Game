@@ -1,5 +1,8 @@
 package com.test.main;
 
+import com.test.main.entities.GameObject;
+import com.test.main.entities.Player;
+
 import java.awt.*;
 import java.util.LinkedList;
 

@@ -1,5 +1,7 @@
 package com.test.main;
 
+import com.test.main.entities.*;
+
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.util.HashSet;
@@ -254,16 +256,18 @@ public class Game extends Canvas implements Runnable{
         int spawn = r.nextInt(spawnRate);
         int spawnX = r.nextInt(xaxis-1);
         int spawnY = r.nextInt(yaxis-1);
-        int enemyType = r.nextInt(2);
+        int enemyType = r.nextInt(5);
 
         if (spawn == 0) {
             Tiles spawnTile = grid[spawnX][spawnY];
             if (spawnTile.getTempObject() == null) {
                 GameObject enemy;
                 if (enemyType == 0) {
-                    enemy = new FastEnemy(ID.Enemy, handler);
-                } else {
+                    enemy = new DeadlyEnemy(ID.Enemy, handler);
+                } else if (enemyType < 3) {
                     enemy = new BasicEnemy(ID.Enemy, handler);
+                } else {
+                    enemy = new FastEnemy(ID.Enemy, handler);
                 }
                 handler.addObject(enemy);
                 spawnTile.setTempObject(enemy);
