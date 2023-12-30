@@ -26,6 +26,7 @@ public class Menu extends MouseAdapter {
         //play button
         if(mouseOver(mx, my, Game.WIDTH/2 - 210, HEIGHT/2 - 150, 400, 128)){
             game.gameState = Game.STATE.Game;
+            game.spawnNewEnemy(1);
             //handler.addObject(new Player(Game.WIDTH / 2 - 32, Game.HEIGHT / 2 - 32, ID.Player, handler));
             //handler.addObject(new BasicEnemy(r.nextInt(Game.SPAWN_WIDTH), r.nextInt(Game.SPAWN_HEIGHT), ID.BasicEnemy, handler));
         }
@@ -44,11 +45,7 @@ public class Menu extends MouseAdapter {
     private boolean mouseOver(int mx, int my, int x, int y, int width, int height) {
         if(game.gameState == Game.STATE.Menu) {
             if (mx > x && mx < x + width) {
-                if (my > y && my < y + height) {
-                    return true;
-                } else {
-                    return false;
-                }
+                return my > y && my < y + height;
             }
         }
         return false;
@@ -59,9 +56,9 @@ public class Menu extends MouseAdapter {
     }
 
     public void render(Graphics g){
+        Font fnt = new Font("arial", Font.BOLD, 75);
+        Font fnt2 = new Font("arial", Font.BOLD, 60);
         if(game.gameState == Game.STATE.Menu){
-            Font fnt = new Font("arial", 1, 75);
-            Font fnt2 = new Font("arial", 1, 60);
             g.setFont(fnt);
             g.setColor(Color.WHITE);
             g.drawString("Menu", Game.WIDTH/2 - 115, 100);
@@ -77,8 +74,6 @@ public class Menu extends MouseAdapter {
             g.drawRect(Game.WIDTH/2 - 210, HEIGHT/2 + 150, 400, 128);
         }
         else if(game.gameState == Game.STATE.Help){
-            Font fnt = new Font("arial", 1, 75);
-            Font fnt2 = new Font("arial", 1, 60);
             g.setFont(fnt);
             g.setColor(Color.WHITE);
         }

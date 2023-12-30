@@ -2,7 +2,9 @@ package com.test.main;
 
 import java.awt.*;
 import java.awt.image.BufferStrategy;
+import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
 
 
 public class Game extends Canvas implements Runnable{
@@ -47,15 +49,6 @@ public class Game extends Canvas implements Runnable{
         for(int i = 0; i < xaxis; i++){
             for(int j = 0; j < yaxis; j++){
                 grid[i][j] = new Tiles(this,handler,(i * Tiles.size),(j * Tiles.size)+108,i,j);
-//                if (j == 2) {
-//                    if (i == 2) {
-//                        grid[i][j].setTempObject(player);
-//                        //player.setCurrentTile(grid[i][j]);
-//                    } else if (i == 5) {
-//                        grid[i][j].setTempObject(enemy);
-//                        //enemy.setCurrentTile(grid[i][j]);
-//                    }
-//                }
                 this.addMouseMotionListener(grid[i][j]);
                 this.addMouseListener(grid[i][j]);
             }
@@ -147,6 +140,9 @@ public class Game extends Canvas implements Runnable{
         else if(gameState == STATE.Menu){
             menu.tick();
         }
+        if (!handler.enemiesExist) {
+            gameState = STATE.Menu;
+        }
     }
 
     private void render(){
@@ -191,26 +187,32 @@ public class Game extends Canvas implements Runnable{
         int i = centerTile.xUnit;
         int j = centerTile.yUnit;
 
-        selectTile(i,j,0,0,selectable);
+        Set<Tiles> tilesSet = getTileList(range, i, j);
+        tilesSet.add(centerTile);
 
-        for (int main = 1; main <= range; main++) {
-            for (int offset = 0; offset < main; offset++) {
-                selectTile(i,j,(main-offset),offset,selectable);
-                selectTile(i,j,offset,-(main-offset),selectable);
-                selectTile(i,j,-(main-offset),-offset,selectable);
-                selectTile(i,j,-offset,(main-offset),selectable);
-            }
-        }
+        tilesSet.forEach(tile -> tile.setSelectable(selectable));
     }
 
-    public void selectTile(int i, int j, int iMove, int jMove, boolean selectable) {
-        int newI = i + iMove;
-        int newJ = j + jMove;
-        try {
-            Tiles tile = grid[newI][newJ];
-            tile.setSelectable(selectable);
-        } catch (ArrayIndexOutOfBoundsException ignored) {
+    public Set<Tiles> getTileList(int range, int centerX, int centerY) {
+        Set<Tiles> tileList = new HashSet<>();
+        for (int main = 1; main <= range; main++) {
+            for (int offset = 0; offset < main; offset++) {
+                tileList.add(getTile(centerX,centerY,(main-offset),offset));
+                tileList.add(getTile(centerX,centerY,offset,-(main-offset)));
+                tileList.add(getTile(centerX,centerY,-(main-offset),-offset));
+                tileList.add(getTile(centerX,centerY,-offset,(main-offset)));
+            }
+        }
+        return tileList;
+    }
 
+    public Tiles getTile(int centerX, int centerY, int xMove, int yMove) {
+        int newX = centerX + xMove;
+        int newY = centerY + yMove;
+        try {
+            return grid[newX][newY];
+        } catch (ArrayIndexOutOfBoundsException ignored) {
+            return grid[centerX][centerY];
         }
     }
 
@@ -218,12 +220,12 @@ public class Game extends Canvas implements Runnable{
         topBar.setCurrentAction(TopBar.ACTION.NONE);
         Tiles prevTile = player.getCurrentTile();
         player.setSelected(false);
-        makeSelectable(2, false);
+        makeSelectable(player.getMoveRange(), false);
         prevTile.setTempObject(null);
         tile.setTempObject(player);
 
         moveEnemies();
-        spawnNewEnemy(10);
+        spawnNewEnemy(5);
     }
 
     public void moveEnemies() {
@@ -234,16 +236,16 @@ public class Game extends Canvas implements Runnable{
                 int i = enemyTile.xUnit;
                 int j = enemyTile.yUnit;
 
-                int eX = r.nextInt(3)-1;
-                int eY = r.nextInt(3)-1;
+                Set<Tiles> tilesSet = getTileList(enemy.getMoveRange(), i, j);
 
-                try {
-                    Tiles moveTile = grid[i+eX][j+eY];
-                    if (moveTile.getTempObject() == null) {
-                        enemyTile.setTempObject(null);
-                        grid[i+eX][j+eY].setTempObject(enemy);
-                    }
-                } catch (ArrayIndexOutOfBoundsException ignored) {}
+                int randomTile = r.nextInt(tilesSet.size());
+
+                Tiles moveTile = (Tiles) tilesSet.toArray()[randomTile];
+
+                if (moveTile.getTempObject() == null) {
+                    enemyTile.setTempObject(null);
+                    moveTile.setTempObject(enemy);
+                }
             }
         }
     }
@@ -271,7 +273,7 @@ public class Game extends Canvas implements Runnable{
         makeSelectable(1,false);
 
         moveEnemies();
-        spawnNewEnemy(1);
+        spawnNewEnemy(2);
     }
 
     public static void main(String[] args){

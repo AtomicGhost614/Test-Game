@@ -9,6 +9,7 @@ public class BasicEnemy extends GameObject{
     public BasicEnemy(ID id, Handler handler) {
         super(0, 0, id);
         this.handler = handler;
+        this.setMoveRange(2);
 
         //velX = 5;
         //velY = 5;

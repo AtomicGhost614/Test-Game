@@ -14,6 +14,7 @@ public class Player extends GameObject{
     public Player(ID id, Handler handler) {
         super(0, 0, id);
         this.handler = handler;
+        this.setMoveRange(2);
     }
 
     public Player(int x, int y, ID id, Handler handler) {

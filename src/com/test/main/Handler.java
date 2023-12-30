@@ -5,20 +5,22 @@ import java.util.LinkedList;
 
 public class Handler {
 
-    LinkedList<GameObject> object = new LinkedList<GameObject>();
+    public LinkedList<GameObject> object = new LinkedList<>();
+    public boolean enemiesExist;
 
     public void tick(){
-        for (int i = 0; i < object.size(); i++){
-            GameObject tempObject = object.get(i);
-
+        enemiesExist = false;
+        for (GameObject tempObject : object) {
             tempObject.tick();
+
+            if (tempObject.getId().equals(ID.Enemy)) {
+                enemiesExist = true;
+            }
         }
     }
 
     public void render(Graphics g){
-        for (int i = 0; i < object.size(); i++){
-            GameObject tempObject = object.get(i);
-
+        for (GameObject tempObject : object) {
             tempObject.render(g);
         }
     }

@@ -9,6 +9,7 @@ public abstract class GameObject {
     protected float velX, velY;
     protected boolean selected = false;
     private Tiles currentTile;
+    private int moveRange;
 
     public GameObject() {}
 
@@ -76,5 +77,13 @@ public abstract class GameObject {
 
     public void setSelected(boolean selected) {
         this.selected = selected;
+    }
+
+    public int getMoveRange() {
+        return moveRange;
+    }
+
+    public void setMoveRange(int moveRange) {
+        this.moveRange = moveRange;
     }
 }
