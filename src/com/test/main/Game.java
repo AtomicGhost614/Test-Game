@@ -254,11 +254,17 @@ public class Game extends Canvas implements Runnable{
         int spawn = r.nextInt(spawnRate);
         int spawnX = r.nextInt(xaxis-1);
         int spawnY = r.nextInt(yaxis-1);
+        int enemyType = r.nextInt(2);
 
         if (spawn == 0) {
             Tiles spawnTile = grid[spawnX][spawnY];
             if (spawnTile.getTempObject() == null) {
-                BasicEnemy enemy = new BasicEnemy(ID.Enemy, handler);
+                GameObject enemy;
+                if (enemyType == 0) {
+                    enemy = new FastEnemy(ID.Enemy, handler);
+                } else {
+                    enemy = new BasicEnemy(ID.Enemy, handler);
+                }
                 handler.addObject(enemy);
                 spawnTile.setTempObject(enemy);
             }
