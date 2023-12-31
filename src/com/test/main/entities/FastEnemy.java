@@ -6,10 +6,10 @@ import com.test.main.entities.GameObject;
 
 import java.awt.*;
 
-public class FastEnemy extends GameObject {
+public class FastEnemy extends Enemy {
 
     public FastEnemy(ID id, Handler handler) {
-        super(0, 0, id);
+        super(id);
         this.setMoveRange(4);
     }
 

@@ -6,10 +6,10 @@ import com.test.main.entities.GameObject;
 
 import java.awt.*;
 
-public class DeadlyEnemy extends GameObject {
+public class DeadlyEnemy extends Enemy {
 
     public DeadlyEnemy(ID id, Handler handler) {
-        super(0, 0, id);
+        super(id);
         this.setMoveRange(1);
     }
 
