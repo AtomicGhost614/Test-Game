@@ -13,6 +13,7 @@ public class TopBar extends MouseAdapter {
 
     private boolean fight;
     private boolean move;
+    public Integer round = 1;
 
     public enum ACTION {
         NONE,
@@ -105,5 +106,9 @@ public class TopBar extends MouseAdapter {
             g.setColor(Color.BLACK);
             g.drawString("Move",134,45);
         }
+
+        //Round counter
+        g.setColor(Color.BLACK);
+        g.drawString("Round: " + round.toString(),800,45);
     }
 }

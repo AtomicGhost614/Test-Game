@@ -143,7 +143,15 @@ public class Game extends Canvas implements Runnable{
             menu.tick();
         }
         if (!handler.enemiesExist) {
-            gameState = STATE.Menu;
+            topBar.round += 1;
+            if (topBar.round == 6) {
+                topBar.round = 0;
+                gameState = STATE.Menu;
+            } else {
+                for (int spawn = 0; spawn < topBar.round; spawn++) {
+                    spawnNewEnemy(1);
+                }
+            }
         }
     }
 
@@ -227,7 +235,7 @@ public class Game extends Canvas implements Runnable{
         tile.setTempObject(player);
 
         moveEnemies();
-        spawnNewEnemy(5);
+//        spawnNewEnemy(5);
     }
 
     public void moveEnemies() {
@@ -283,7 +291,7 @@ public class Game extends Canvas implements Runnable{
         makeSelectable(1,false);
 
         moveEnemies();
-        spawnNewEnemy(2);
+//        spawnNewEnemy(2);
     }
 
     public static void main(String[] args){
