@@ -26,6 +26,9 @@ public class Menu extends MouseAdapter {
         //play button
         if(mouseOver(mx, my, Game.WIDTH/2 - 210, HEIGHT/2 - 150, 400, 128)){
             game.gameState = Game.STATE.Game;
+            if (!handler.playerExists) {
+                game.spawnPlayer();
+            }
         }
 
         //quit button

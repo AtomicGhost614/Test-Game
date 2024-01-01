@@ -125,7 +125,7 @@ public class Tiles extends MouseAdapter implements MouseMotionListener{
                 g.fillRect(tx,ty,size,size);
            }
            if (game.topBar.getCurrentAction().equals(TopBar.ACTION.FIGHT)) {
-               game.makeSelectable(1,true);
+               game.makeSelectable(2,true);
            } else {
                game.makeSelectable(2,game.topBar.getCurrentAction().equals(TopBar.ACTION.MOVE));
            }

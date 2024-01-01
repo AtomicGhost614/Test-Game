@@ -6,9 +6,9 @@ import com.test.main.entities.GameObject;
 
 import java.awt.*;
 
-public class DeadlyEnemy extends Enemy {
+public class SlowEnemy extends Enemy {
 
-    public DeadlyEnemy(ID id, Handler handler) {
+    public SlowEnemy(ID id, Handler handler) {
         super(id);
         this.setMoveRange(1);
     }

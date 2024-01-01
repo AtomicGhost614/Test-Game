@@ -10,14 +10,18 @@ public class Handler {
 
     public LinkedList<GameObject> object = new LinkedList<>();
     public boolean enemiesExist;
+    public boolean playerExists;
 
     public void tick(){
         enemiesExist = false;
+        playerExists = false;
         for (GameObject tempObject : object) {
             tempObject.tick();
 
             if (tempObject.getId().equals(ID.Enemy)) {
                 enemiesExist = true;
+            } else if (tempObject.getId().equals(ID.Player)) {
+                playerExists = true;
             }
         }
     }
@@ -29,13 +33,13 @@ public class Handler {
     }
 
     public void clearEnemys(){
-        for(int i = 0; i < object.size(); i++){
-            GameObject tempObject = object.get(i);
-            if(tempObject.getId() == ID.Player){
-                object.clear();
-                addObject(new Player((int) tempObject.getX(), (int) tempObject.getY(), ID.Player, this));
+        for (GameObject tempObject : object) {
+            if (tempObject.getId().equals(ID.Enemy)) {
+                Tiles tile = tempObject.getCurrentTile();
+                tile.contains = Tiles.OBJECT.None;
             }
         }
+        object.clear();
     }
 
     public void addObject(GameObject object){

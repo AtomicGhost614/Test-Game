@@ -38,6 +38,7 @@ public class Game extends Canvas implements Runnable{
         player = new Player(ID.Player, handler);
         topBar = new TopBar(this,handler);
         this.addMouseListener(menu);
+        this.addMouseListener(topBar);
         new Window(WIDTH, HEIGHT, "Game", this);
         r = new Random();
         for(int i = 0; i < xaxis; i++){
@@ -47,11 +48,7 @@ public class Game extends Canvas implements Runnable{
                 this.addMouseListener(grid[i][j]);
             }
         }
-        int playerRandX = r.nextInt(xaxis-1);
-        int playerRandY = r.nextInt(yaxis-1);
-        grid[playerRandX][playerRandY].setTempObject(player);
-        this.addMouseListener(topBar);
-        handler.addObject(player);
+        spawnPlayer();
     }
 
     public synchronized void start(){
@@ -122,6 +119,10 @@ public class Game extends Canvas implements Runnable{
             } else {
                 spawnNewEnemy();
             }
+        } else if (!handler.playerExists) {
+            handler.clearEnemys();
+            topBar.setRound(0);
+            gameState = STATE.Menu;
         }
     }
 
@@ -201,6 +202,13 @@ public class Game extends Canvas implements Runnable{
         moveEnemies();
     }
 
+    public void spawnPlayer() {
+        int playerRandX = r.nextInt(xaxis-1);
+        int playerRandY = r.nextInt(yaxis-1);
+        grid[playerRandX][playerRandY].setTempObject(player);
+        handler.addObject(player);
+    }
+
     public void moveEnemies() {
         for (GameObject enemy : handler.object) {
             if (enemy.getId().equals(ID.Enemy)) {
@@ -218,6 +226,11 @@ public class Game extends Canvas implements Runnable{
                 if (moveTile.getTempObject() == null) {
                     enemyTile.setTempObject(null);
                     moveTile.setTempObject(enemy);
+                } else if (moveTile.getTempObject().getId().equals(ID.Player)) {
+                    enemyTile.setTempObject(null);
+                    handler.removeObject(player);
+                    moveTile.setTempObject(null);
+                    moveTile.setTempObject(enemy);
                 }
             }
         }
@@ -226,7 +239,7 @@ public class Game extends Canvas implements Runnable{
     public void spawnNewEnemy() {
         List<Enemy> enemies = new ArrayList<>();
         if (topBar.getRound() > 0) {
-            enemies.add(new DeadlyEnemy(ID.Enemy, handler));
+            enemies.add(new SlowEnemy(ID.Enemy, handler));
         }
         if (topBar.getRound() > 1) {
             enemies.add(new BasicEnemy(ID.Enemy, handler));
@@ -262,7 +275,7 @@ public class Game extends Canvas implements Runnable{
         selectedTile.contains = Tiles.OBJECT.None;
         topBar.setCurrentAction(TopBar.ACTION.NONE);
         player.setSelected(false);
-        makeSelectable(1,false);
+        makeSelectable(player.getMoveRange(), false);
 
         moveEnemies();
     }
