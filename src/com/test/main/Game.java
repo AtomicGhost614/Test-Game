@@ -16,7 +16,7 @@ public class Game extends Canvas implements Runnable{
     private boolean running = false;
     private final Random r;
     private final Menu menu;
-    private final Player player;
+    public final Player player;
     private final Handler handler;
 
     private final int xaxis = WIDTH/Tiles.size;
@@ -113,6 +113,9 @@ public class Game extends Canvas implements Runnable{
         }
         if (!handler.enemiesExist) {
             topBar.setRound(topBar.getRound() + 1);
+            if (topBar.getRound() % 2 == 0) {
+                spawnPowerUp();
+            }
             if (topBar.getRound() == 6) {
                 topBar.setRound(0);
                 gameState = STATE.Menu;
@@ -195,8 +198,14 @@ public class Game extends Canvas implements Runnable{
         topBar.setCurrentAction(TopBar.ACTION.NONE);
         Tiles prevTile = player.getCurrentTile();
         player.setSelected(false);
+        if (tile.contains.equals(Tiles.OBJECT.PowerUp)) {
+            handler.removeObject(tile.getTempObject());
+            tile.setTempObject(null);
+            player.setMoveRange(player.getMoveRange()+1);
+        }
         makeSelectable(player.getMoveRange(), false);
         prevTile.setTempObject(null);
+//        if (tile.contains.)
         tile.setTempObject(player);
 
         moveEnemies();
@@ -278,6 +287,23 @@ public class Game extends Canvas implements Runnable{
         makeSelectable(player.getMoveRange(), false);
 
         moveEnemies();
+    }
+
+    public void spawnPowerUp() {
+        boolean powerUpSet = false;
+        PowerUp powerUp = new PowerUp(ID.PowerUp,handler);
+        while (!powerUpSet) {
+            int spawnX = r.nextInt(xaxis-1);
+            int spawnY = r.nextInt(yaxis-1);
+            Tiles spawnTile = grid[spawnX][spawnY];
+            try {
+                spawnTile.setTempObject(powerUp);
+                handler.addObject(powerUp);
+                powerUpSet = true;
+            } catch (NullPointerException ignored) {
+
+            }
+        }
     }
 
     public static void main(String[] args){

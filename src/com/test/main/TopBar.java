@@ -50,7 +50,7 @@ public class TopBar extends MouseAdapter {
             } else {
                 this.currentAction = ACTION.FIGHT;
             }
-            game.makeSelectable(2,false);
+            game.makeSelectable(game.player.getMoveRange(),false);
         }
 
         //move button
