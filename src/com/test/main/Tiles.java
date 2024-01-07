@@ -25,6 +25,7 @@ public class Tiles extends MouseAdapter implements MouseMotionListener{
     public enum OBJECT {
         Player,
         Enemy,
+        PowerUp,
         None
     }
 
@@ -74,7 +75,7 @@ public class Tiles extends MouseAdapter implements MouseMotionListener{
         int ymax = this.ty + size;
 
         if(mouseOver(mx, my, this.tx, this.ty, 94, 94) && selectable){
-            if(game.topBar.getCurrentAction().equals(TopBar.ACTION.MOVE) && contains.equals(OBJECT.None)) {
+            if(game.topBar.getCurrentAction().equals(TopBar.ACTION.MOVE) && !contains.equals(OBJECT.Enemy)) {
                 game.movePlayer(this);
             } else if(game.topBar.getCurrentAction().equals(TopBar.ACTION.FIGHT) && contains.equals(OBJECT.Enemy)){
                 game.destroyEnemy(this);
@@ -125,9 +126,9 @@ public class Tiles extends MouseAdapter implements MouseMotionListener{
                 g.fillRect(tx,ty,size,size);
            }
            if (game.topBar.getCurrentAction().equals(TopBar.ACTION.FIGHT)) {
-               game.makeSelectable(1,true);
+               game.makeSelectable(game.player.getMoveRange(),true);
            } else {
-               game.makeSelectable(2,game.topBar.getCurrentAction().equals(TopBar.ACTION.MOVE));
+               game.makeSelectable(game.player.getMoveRange(),game.topBar.getCurrentAction().equals(TopBar.ACTION.MOVE));
            }
 
             g.setColor(Color.WHITE);
@@ -155,19 +156,23 @@ public class Tiles extends MouseAdapter implements MouseMotionListener{
         return tempObject;
     }
 
-    public void setTempObject(GameObject tempObject) {
+    public void setTempObject(GameObject tempObject) throws NullPointerException {
         this.tempObject = tempObject;
         if(tempObject == null){
             contains = OBJECT.None;
-        } else {
+        } else if (contains.equals(OBJECT.None)){
             tempObject.setX(tx+32);
             tempObject.setY(ty+32);
             if (tempObject.getId().equals(ID.Player)) {
                 contains = OBJECT.Player;
             } else if (tempObject.getId().equals(ID.Enemy)) {
                 contains = OBJECT.Enemy;
+            } else if (tempObject.getId().equals(ID.PowerUp)) {
+                contains = OBJECT.PowerUp;
             }
             tempObject.setCurrentTile(this);
+        } else {
+            throw new NullPointerException();
         }
     }
 }

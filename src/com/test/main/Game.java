@@ -4,9 +4,8 @@ import com.test.main.entities.*;
 
 import java.awt.*;
 import java.awt.image.BufferStrategy;
-import java.util.HashSet;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
+import java.util.List;
 
 
 public class Game extends Canvas implements Runnable{
@@ -16,11 +15,8 @@ public class Game extends Canvas implements Runnable{
     private Thread thread;
     private boolean running = false;
     private final Random r;
-    //private HUD hud;
-    //private Spawn spawn;
     private final Menu menu;
-    private final Player player;
-    private final BasicEnemy enemy;
+    public final Player player;
     private final Handler handler;
 
     private final int xaxis = WIDTH/Tiles.size;
@@ -40,13 +36,10 @@ public class Game extends Canvas implements Runnable{
         handler = new Handler();
         menu = new Menu(this, handler);
         player = new Player(ID.Player, handler);
-        enemy = new BasicEnemy(ID.Enemy, handler);
         topBar = new TopBar(this,handler);
-        //this.addKeyListener(new KeyInput(handler));
         this.addMouseListener(menu);
+        this.addMouseListener(topBar);
         new Window(WIDTH, HEIGHT, "Game", this);
-        //hud = new HUD();
-        //spawn = new Spawn(handler, hud);
         r = new Random();
         for(int i = 0; i < xaxis; i++){
             for(int j = 0; j < yaxis; j++){
@@ -55,29 +48,7 @@ public class Game extends Canvas implements Runnable{
                 this.addMouseListener(grid[i][j]);
             }
         }
-        int playerRandX = r.nextInt(xaxis-1);
-        int playerRandY = r.nextInt(yaxis-1);
-        grid[playerRandX][playerRandY].setTempObject(player);
-        int enemyRandX = r.nextInt(xaxis-1);
-        int enemyRandY = r.nextInt(yaxis-1);
-        Tiles enemyTile = grid[enemyRandX][enemyRandY];
-        while (!enemyTile.contains.equals(Tiles.OBJECT.Enemy)) {
-            if (enemyTile.contains.equals(Tiles.OBJECT.Player)) {
-                enemyRandX = r.nextInt(xaxis-1);
-                enemyRandY = r.nextInt(yaxis-1);
-                enemyTile = grid[enemyRandX][enemyRandY];
-            } else {
-                enemyTile.setTempObject(enemy);
-            }
-        }
-//        topBar = new TopBar(this,handler);
-        this.addMouseListener(topBar);
-        //if(gameState == STATE.Game) {
-//        player.setX(grid[2][2].tx + 31);
-//        player.setY(grid[2][2].ty + 31);
-        handler.addObject(player);
-        handler.addObject(enemy);
-        //}
+        spawnPlayer();
     }
 
     public synchronized void start(){
@@ -113,7 +84,6 @@ public class Game extends Canvas implements Runnable{
                 delta--;
             }
             if(running){
-                //makeSelectable();
                 render();
             }
             frames++;
@@ -121,7 +91,6 @@ public class Game extends Canvas implements Runnable{
             if(System.currentTimeMillis() - timer > 1000){
                 timer += 1000;
                 System.out.println("FPS: " + frames);
-//                System.out.println(Tiles.size);
                 frames = 0;
             }
         }
@@ -143,15 +112,20 @@ public class Game extends Canvas implements Runnable{
             menu.tick();
         }
         if (!handler.enemiesExist) {
-            topBar.round += 1;
-            if (topBar.round == 6) {
-                topBar.round = 0;
+            topBar.setRound(topBar.getRound() + 1);
+            if (topBar.getRound() % 2 == 0) {
+                spawnPowerUp();
+            }
+            if (topBar.getRound() == 6) {
+                topBar.setRound(0);
                 gameState = STATE.Menu;
             } else {
-                for (int spawn = 0; spawn < topBar.round; spawn++) {
-                    spawnNewEnemy(1);
-                }
+                spawnNewEnemy();
             }
+        } else if (!handler.playerExists) {
+            handler.clearEnemys();
+            topBar.setRound(0);
+            gameState = STATE.Menu;
         }
     }
 
@@ -167,10 +141,7 @@ public class Game extends Canvas implements Runnable{
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, WIDTH, HEIGHT);
 
-        //handler.render(g);
-
         if(gameState == STATE.Game) {
-            //hud.render(g);
             grid[0][0].render(g);
             for(int i = 0; i < xaxis; i++){
                 for(int j = 0; j < yaxis; j++){
@@ -184,9 +155,6 @@ public class Game extends Canvas implements Runnable{
         else if(gameState == STATE.Menu || gameState == STATE.Help){
             menu.render(g);
         }
-
-        //handler.render(g);
-
         g.dispose();
         bs.show();
     }
@@ -230,12 +198,24 @@ public class Game extends Canvas implements Runnable{
         topBar.setCurrentAction(TopBar.ACTION.NONE);
         Tiles prevTile = player.getCurrentTile();
         player.setSelected(false);
+        if (tile.contains.equals(Tiles.OBJECT.PowerUp)) {
+            handler.removeObject(tile.getTempObject());
+            tile.setTempObject(null);
+            player.setMoveRange(player.getMoveRange()+1);
+        }
         makeSelectable(player.getMoveRange(), false);
         prevTile.setTempObject(null);
+//        if (tile.contains.)
         tile.setTempObject(player);
 
         moveEnemies();
-//        spawnNewEnemy(5);
+    }
+
+    public void spawnPlayer() {
+        int playerRandX = r.nextInt(xaxis-1);
+        int playerRandY = r.nextInt(yaxis-1);
+        grid[playerRandX][playerRandY].setTempObject(player);
+        handler.addObject(player);
     }
 
     public void moveEnemies() {
@@ -255,30 +235,46 @@ public class Game extends Canvas implements Runnable{
                 if (moveTile.getTempObject() == null) {
                     enemyTile.setTempObject(null);
                     moveTile.setTempObject(enemy);
+                } else if (moveTile.getTempObject().getId().equals(ID.Player)) {
+                    enemyTile.setTempObject(null);
+                    handler.removeObject(player);
+                    moveTile.setTempObject(null);
+                    moveTile.setTempObject(enemy);
                 }
             }
         }
     }
 
-    public void spawnNewEnemy(int spawnRate) {
-        int spawn = r.nextInt(spawnRate);
-        int spawnX = r.nextInt(xaxis-1);
-        int spawnY = r.nextInt(yaxis-1);
-        int enemyType = r.nextInt(5);
+    public void spawnNewEnemy() {
+        List<Enemy> enemies = new ArrayList<>();
+        if (topBar.getRound() > 0) {
+            enemies.add(new SlowEnemy(ID.Enemy, handler));
+        }
+        if (topBar.getRound() > 1) {
+            enemies.add(new BasicEnemy(ID.Enemy, handler));
+        }
+        if (topBar.getRound() > 2) {
+            enemies.add(new BasicEnemy(ID.Enemy, handler));
+        }
+        if (topBar.getRound() > 3) {
+            enemies.add(new FastEnemy(ID.Enemy, handler));
+        }
+        if (topBar.getRound() > 4) {
+            enemies.add(new FastEnemy(ID.Enemy, handler));
+        }
+        for (Enemy enemy : enemies) {
+            boolean enemySet = false;
+            while (!enemySet) {
+                int spawnX = r.nextInt(xaxis-1);
+                int spawnY = r.nextInt(yaxis-1);
+                Tiles spawnTile = grid[spawnX][spawnY];
+                try {
+                    spawnTile.setTempObject(enemy);
+                    handler.addObject(enemy);
+                    enemySet = true;
+                } catch (NullPointerException ignored) {
 
-        if (spawn == 0) {
-            Tiles spawnTile = grid[spawnX][spawnY];
-            if (spawnTile.getTempObject() == null) {
-                GameObject enemy;
-                if (enemyType == 0) {
-                    enemy = new DeadlyEnemy(ID.Enemy, handler);
-                } else if (enemyType < 3) {
-                    enemy = new BasicEnemy(ID.Enemy, handler);
-                } else {
-                    enemy = new FastEnemy(ID.Enemy, handler);
                 }
-                handler.addObject(enemy);
-                spawnTile.setTempObject(enemy);
             }
         }
     }
@@ -288,10 +284,26 @@ public class Game extends Canvas implements Runnable{
         selectedTile.contains = Tiles.OBJECT.None;
         topBar.setCurrentAction(TopBar.ACTION.NONE);
         player.setSelected(false);
-        makeSelectable(1,false);
+        makeSelectable(player.getMoveRange(), false);
 
         moveEnemies();
-//        spawnNewEnemy(2);
+    }
+
+    public void spawnPowerUp() {
+        boolean powerUpSet = false;
+        PowerUp powerUp = new PowerUp(ID.PowerUp,handler);
+        while (!powerUpSet) {
+            int spawnX = r.nextInt(xaxis-1);
+            int spawnY = r.nextInt(yaxis-1);
+            Tiles spawnTile = grid[spawnX][spawnY];
+            try {
+                spawnTile.setTempObject(powerUp);
+                handler.addObject(powerUp);
+                powerUpSet = true;
+            } catch (NullPointerException ignored) {
+
+            }
+        }
     }
 
     public static void main(String[] args){

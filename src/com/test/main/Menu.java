@@ -26,9 +26,9 @@ public class Menu extends MouseAdapter {
         //play button
         if(mouseOver(mx, my, Game.WIDTH/2 - 210, HEIGHT/2 - 150, 400, 128)){
             game.gameState = Game.STATE.Game;
-            game.spawnNewEnemy(1);
-            //handler.addObject(new Player(Game.WIDTH / 2 - 32, Game.HEIGHT / 2 - 32, ID.Player, handler));
-            //handler.addObject(new BasicEnemy(r.nextInt(Game.SPAWN_WIDTH), r.nextInt(Game.SPAWN_HEIGHT), ID.BasicEnemy, handler));
+            if (!handler.playerExists) {
+                game.spawnPlayer();
+            }
         }
 
         //quit button
