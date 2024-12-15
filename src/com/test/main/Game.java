@@ -12,6 +12,7 @@ public class Game extends Canvas implements Runnable{
 
     public static final int WIDTH = 960, HEIGHT = WIDTH / 12 * 9;
     public static final int SPAWN_WIDTH = WIDTH - 42, SPAWN_HEIGHT = HEIGHT - 65;
+    public static final double FPS = 30.0;
     private Thread thread;
     private boolean running = false;
     private final Random r;
@@ -70,8 +71,9 @@ public class Game extends Canvas implements Runnable{
     public void run() {
         this.requestFocus();
         long lastTime = System.nanoTime();
-        double amountOfTicks = 60.0;
-        double ns = 1000000000 / amountOfTicks;
+        // Add global variable and potential mutability
+//        double amountOfTicks = 60.0;
+        double ns = 1000000000 / FPS;
         double delta = 0;
         long timer = System.currentTimeMillis();
         int frames = 0;
@@ -82,11 +84,15 @@ public class Game extends Canvas implements Runnable{
             while(delta >= 1){
                 tick();
                 delta--;
+                if(running){
+                    render();
+                }
+                frames++;
             }
-            if(running){
-                render();
-            }
-            frames++;
+//            if(running){
+//                render();
+//            }
+//            frames++;
 
             if(System.currentTimeMillis() - timer > 1000){
                 timer += 1000;
